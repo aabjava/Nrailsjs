@@ -15,15 +15,16 @@ import path from "path";
 class Nrailsjs {
 
     constructor(configFile){
-       this._config = this.mergeConfig();
-       this._app = express();
-       this._controllers = new Map();
-       this._services = new Map();
-       this._container = new ContainerBuilder();
+        //no _ for private variables because it break autocomplete as its useless in js
+       this.config = this.mergeConfig(configFile);
+       this.app = express();
+       this.controllers = new Map();
+       this.services = new Map();
+       this.container = new ContainerBuilder();
 
-       const serviceDir = this._config['services.dir'];
-        const controllersDir = this._config['controllers.dir'];
-        this.initDependencyInjection(serviceDir,this._app,this._container);
+       const serviceDir = this.config['services.dir'];
+        const controllersDir = this.config['controllers.dir'];
+        this.initDependencyInjection(serviceDir,this.app,this.container);
         this.initMappings(controllersDir);
 
         this.configExpress();
@@ -31,9 +32,9 @@ class Nrailsjs {
     }
 
     configExpress(){
-        this._app.use(bodyParser.json());
-        this._app.use(bodyParser.urlencoded({ extended: true }));
-        this._app.use(cookieParser());
+        this.app.use(bodyParser.json());
+        this.app.use(bodyParser.urlencoded({ extended: true }));
+        this.app.use(cookieParser());
     }
 
     async initDependencyInjection(serviceDir,app,container){
@@ -57,7 +58,7 @@ class Nrailsjs {
                     if( typeof instance['init'] === 'function' ){
                         instance.init(container);
                     }
-                    this._services.set(serviceInstance,instance);
+                    this.services.set(serviceInstance,instance);
 
                 }catch (e) {
                     console.error("Error init services ")
@@ -73,7 +74,7 @@ class Nrailsjs {
         //init controllers
         try{
             const files = fs.readdirSync(controllerDir);
-            this._controllers = await loadControllers(this._app,controllerDir,files);
+            this.controllers = await loadControllers(this.app,controllerDir,files);
 
 
         }catch (e) {
@@ -95,7 +96,7 @@ class Nrailsjs {
         //init mapping from file
     }
 
-    mergeConfig(){
+    mergeConfig(configFile){
         const flatten = flat(config);
         return flatten;
     }
