@@ -1,6 +1,6 @@
 {
   "name": "@aabjava/nrails-js",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Nodejs server inspired on features from Grails not Rails :D",
   "author": "André Bastos",
   "license": "MIT",
