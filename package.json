@@ -1,10 +1,13 @@
 {
   "name": "@aabjava/nrails-js",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Nodejs server inspired on features from Grails not Rails :D",
   "author": "André Bastos",
   "license": "MIT",
   "main": "index.js",
+  "homepage": "https://github.com/aabjava/Nrailsjs#readme",
+  "repository": "https://github.com/aabjava/Nrailsjs",
+  "url" : "https://github.com/aabjava/Nrailsjs/issues",
   "scripts": {
     "test": "jest",
     "startdev": "nodemon start.js "
