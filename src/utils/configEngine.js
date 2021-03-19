@@ -53,7 +53,7 @@ function mergeConfigFiles(filesArray,env = 'development') {
             }
         }
        // console.debug("Merged config ",mergedConfig)
-        if(log.enabledFor('trace')){
+        if(log.enabledFor('debug')){
             log.debug("Merged files log");
 
 

@@ -4,13 +4,14 @@ class Controller{
 
 
 
+
     constructor(){
         this._methodByName = new Map();
         this._methodByUrl = new Map();
         this._mappingUrlToActionName = new Map()
         this.log = anylogger(this.constructor.name);
     }
-    static ignoreMethodsForUrl = ['registerRoutes','init'];
+    static ignoreMethodsForUrl = ['registerRoutes','init','log'];
 
     static getAllMethods = (obj) => {
         let props = []
@@ -74,7 +75,8 @@ class Controller{
 
 
             const method = this[methodName];
-            const methodWrapped = this.methodWrapper(method);
+
+            const methodWrapped = methodWrapper(method);
             this._methodByUrl.set(url,methodWrapped);
             this._methodByName.set(methodName,methodWrapped);
 
@@ -90,26 +92,19 @@ class Controller{
     }
 
 
-    /**
-     *
-     * @param req
-     * @param res
-     * @param param id header
-     * @returns {Promise<void>}
-     */
-
-    methodWrapper =method => (req, res, next = console.error) =>{
-        return Promise.resolve(method(req, res)).catch(next)
-        /* try{
-             return func(req,res);
-         }catch (e) {
-
-         }*/
-
-        // res.send("HEllo stranger "+req.params.id)
-    }
 
 
+}
+
+const methodWrapper =method => (req, res, next = console.error) =>{
+    return Promise.resolve(method(req, res)).catch(next)
+    /* try{
+         return func(req,res);
+     }catch (e) {
+
+     }*/
+
+    // res.send("HEllo stranger "+req.params.id)
 }
 
 module.exports = Controller;

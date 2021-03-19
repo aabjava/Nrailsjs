@@ -43,7 +43,7 @@ class Nrailsjs {
 
        const controllersDir = path.join(baseDir,this.config['controllers.dir']);
        this.initDependencyInjection(serviceDir,this.express,this.container);
-       this.initMappings(baseDir,controllersDir);
+       this.initMappings(controllersDir);
 
 
 
@@ -80,8 +80,9 @@ class Nrailsjs {
             next();
         });
         try{
-            const files = fs.readdirSync(serviceDir);
             this.logger("Loading services in dir ",serviceDir);
+            const files = fs.readdirSync(serviceDir);
+
             const serviceListInit = await loadServices(container,serviceDir,files,this.logger);
 
             for (let i = 0; i < serviceListInit.length ; i++) {
@@ -105,7 +106,7 @@ class Nrailsjs {
         }
     }
 
-    async initMappings(controllerDir,mappingFile){
+    async initMappings(controllerDir){
         //init controllers
         this.logger("Init controllers url mappings ");
         try{
@@ -125,35 +126,38 @@ class Nrailsjs {
 
 }
 
-async function loadServices(container,directory,files) {
+async function loadServices(container,directory,files,log) {
     let serviceListInit = [];
 
 
     for (let i = 0; i < files.length ; i++) {
         const file = files[i]
-        console.log(file);
+
 
         if(file.endsWith('Service.js')){
             const path =directory+"/"+file;
 
             try{
+                log("Loading service = "+file);
                 const Service = await require(path);
                 //   console.debug("Ser ",Service)
-                if(Service.default !=null){
+                if(Service !=null){
                     //check it has a register function
 
                     const serviceName = file.replace(".js","");
 
-                    const serviceInstance = Service.default;
-                    container.register(serviceName,serviceInstance);
+                    const serviceInstance = new  Service();
+                    container.register(serviceName,Service);
                     serviceListInit.push(serviceName);
+                    log("Service "+serviceName+" is now available for dependencie injection");
                 }else{
-                    console.warn("File "+file+" does not have default service defined..")
+                    log.warn("Service file "+file+" doesnt have a default export- fix this if this is a service");
+
                 }
 
 
             }catch (e) {
-                console.error("Error instatioation service = ",e)
+               log.error("Service file = "+file+" not loaded ",e);
             }
 
 
@@ -178,14 +182,14 @@ async function loadControllers(app,directory,files,log) {
 
             try{
                 log("Loading controller = "+file);
-                const Service = await require(path);
+                const controller = await require(path);
                //does this work with export default ??
-                if(Service !=null){
+                if(controller !=null){
                     //check it has a register function
 
                     const serviceName = file.replace(".js","");
 
-                    const serviceInstance = new Service();
+                    const serviceInstance = new controller();
                     serviceInstance.registerRoutes(app);
 
                     controllerMap.set(serviceName,serviceInstance);
