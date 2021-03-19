@@ -1,5 +1,6 @@
-const {mergeConfigFiles} =  require("../../conf/configEngine.js");
-
+const {mergeConfigFiles} =  require("../../utils/configEngine.js");
+const ulog = require('ulog');
+ulog.level = 'debug';
 
 const testFile1 = {
     "server":{
@@ -36,8 +37,13 @@ const testFile4 = {
     }
 }
 
+test('merge and flatten undefined',()=>{
+    expect(mergeConfigFiles([undefined])).toStrictEqual({})
+});
 
-
+test('merge and flatten undefined and a file',()=>{
+    expect(mergeConfigFiles([undefined,testFile1])).toStrictEqual({"server.port":2000})
+});
 test('merge and flatten single file',()=>{
     expect(mergeConfigFiles([testFile1])).toStrictEqual({"server.port":2000})
 });
