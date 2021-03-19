@@ -1,3 +1,4 @@
+require("ulog");
 const Nrailsjs = require("./src/Nrailsjs");
 
 const myConfig = {
@@ -10,6 +11,7 @@ const myConfig = {
     "server":{
         "port":4000
     }
+
 
 };
 console.clear()

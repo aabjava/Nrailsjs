@@ -1,3 +1,4 @@
+require("ulog");
 const Nrailsjs = require('./src/Nrailsjs.js');
 const Controller = require("./src/controllers/Controller");
 const Service = require("./src/services/Service");
