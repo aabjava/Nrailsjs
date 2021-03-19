@@ -1,3 +1,5 @@
+const anylogger = require('anylogger');
+
 class Controller{
 
 
@@ -6,6 +8,7 @@ class Controller{
         this._methodByName = new Map();
         this._methodByUrl = new Map();
         this._mappingUrlToActionName = new Map()
+        this.log = anylogger(this.constructor.name);
     }
     static ignoreMethodsForUrl = ['registerRoutes','init'];
 
@@ -34,7 +37,9 @@ class Controller{
 
     registerRoutes(app){
         const baseRouteUrl = this.baseUrl || "/"+this.constructor.name.toLowerCase().replace("controller","");
-        console.debug("Base route  =",baseRouteUrl)
+
+
+        this.log("Base name = "+baseRouteUrl+" (set diferent base name in class by defining a variable named = baseUrl = '/path')");
 
         const listMethods = Controller.getAllMethods(this);
         //create routes
@@ -62,7 +67,7 @@ class Controller{
             }
         }
 
-        console.debug("Ulrs  = ",routeMap);
+
 
         for(let [url,methodName] of routeMap){
 
@@ -79,7 +84,7 @@ class Controller{
 
         }
         this._mappingUrlToActionName = routeMap;
-        console.debug("Mapping url to action name = ",this._mappingUrlToActionName)
+        this.log("Mapping url to action name = ",this._mappingUrlToActionName)
 
 
     }
@@ -107,4 +112,4 @@ class Controller{
 
 }
 
-export default Controller;
+module.exports = Controller;

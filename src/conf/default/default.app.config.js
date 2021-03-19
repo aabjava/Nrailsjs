@@ -1,18 +1,20 @@
 const config = {
-
-  "urlMapping": {
-      "file": "./conf/urlMapping/urlMapping.js"
+  //defined dir locations
+  "services":{
+    "dir":"/src/services"
   },
+  "controllers":{
+    "dir":"/src/controllers"
+  },
+  "urlMapping": {
+      "file": "/src/conf/urlMapping/urlMapping.js"
+  },
+  //defined default
   "server": {
     "port": 3001,
     "serverUrl": "http:/localhost:3001"
   },
-  "services":{
-    "dir":"./services"
-  },
-  "controllers":{
-    "dir":"./controllers"
-  }
+
 };
 
-export default config;
+module.exports = config;

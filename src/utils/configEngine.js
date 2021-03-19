@@ -1,5 +1,6 @@
 const flat  = require("flat");
-
+const anylogger = require('anylogger');
+const log = anylogger("config");
 
 const environments = {
     development:"development",
@@ -15,11 +16,18 @@ const environments = {
 function mergeConfigFiles(filesArray,env = 'development') {
     try{
 
-
+        log("Merging config files =  "+filesArray.length+" files , env = "+env);
         let array = [];
         for(const file of filesArray){
-            array.push(flat(file))
+            if(file != null){
+              //  console.debug(file)
+                array.push(flat(file))
+            }
+
         }
+        if(array.length === 0)
+            return {};
+       // console.debug("Files = ",array.length)
        // console.debug("Enviroment = "+enviroment)
         let mergedConfig =array.reduce((f,l)=>merge(f,l));
         //ok remove all enviroments that are not the current
@@ -45,9 +53,18 @@ function mergeConfigFiles(filesArray,env = 'development') {
             }
         }
        // console.debug("Merged config ",mergedConfig)
+        if(log.enabledFor('trace')){
+            log.debug("Merged files log");
+
+
+            log.debug("Config",mergedConfig)
+
+        }
+
         return mergedConfig;
     }catch (e) {
         console.debug("Error ",e)
+        log.error("Merging config files failed = ",e)
         return null;
     }
 
